@@ -1,0 +1,69 @@
+# Pulse Production Configuration
+# Scalable Multi-Tenant Real-Time IM Cluster
+
+version: v1.0-prod
+
+cell:
+  id: cell-us-01
+  region: us-east-1
+  user_shard_from: 0
+  user_shard_to: 10000000
+
+roles:
+  cell: true
+  gateway: true
+  storage: true
+  license: true
+  admin: true
+
+postgres:
+  host: postgres
+  port: 5432
+  database: ${POSTGRES_DB}
+  user: ${POSTGRES_USER}
+  password: ${POSTGRES_PASSWORD}
+  ssl_mode: disable
+  max_conns: 100
+  min_conns: 10
+  migrations_path: /migrations
+
+nats:
+  url: nats://nats:4222
+  cluster_id: pulse-prod-cluster
+  cell_id: cell-us-01
+  stream_prefix: pulse
+
+object_storage:
+  backend: s3
+  endpoint: ${PULSE_STORAGE_ENDPOINT}
+  region: ${PULSE_STORAGE_REGION}
+  bucket: ${PULSE_STORAGE_BUCKET}
+  access_key: ${PULSE_STORAGE_ACCESS_KEY}
+  secret_key: ${PULSE_STORAGE_SECRET_KEY}
+  public_url: ${PULSE_PUBLIC_API_URL}/media
+
+auth:
+  jwt_secret: ${PULSE_JWT_SECRET}
+  user_token_ttl_seconds: 2592000   # 30d
+  admin_token_ttl_seconds: 31536000 # 1y
+
+log:
+  level: info
+  format: json
+
+api:
+  listen: ":32011"
+  base_url: ${PULSE_PUBLIC_API_URL}
+
+gateway:
+  listen: ":32001"
+  admin_listen: ":32003"
+  subprotocol: pulse.protocol.v1.msgpack
+  heartbeat_seconds: 15
+  max_conns: 50000
+  session_ttl_seconds: 2592000
+  handoff_enabled: true
+
+license:
+  mode: self-hosted
+  cache_ttl_seconds: 3600

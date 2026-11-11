@@ -1,0 +1,91 @@
+# Pulse Local Development Dependencies
+# Usage: docker compose up -d
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: pulse-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: pulse
+      POSTGRES_USER: pulse
+      POSTGRES_PASSWORD: pulse
+    ports:
+      - "32432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pulse"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+
+  nats:
+    image: nats:2.10-alpine
+    container_name: pulse-nats
+    restart: unless-stopped
+    command: ["--jetstream", "--store_dir=/data", "--http_port=8222"]
+    ports:
+      - "32222:4222"
+      - "32822:8222"
+    volumes:
+      - nats_data:/data
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8222/healthz"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+
+  rustfs:
+    image: rustfs/rustfs:latest
+    container_name: pulse-rustfs
+    restart: unless-stopped
+    environment:
+      RUSTFS_ACCESS_KEY: pulse
+      RUSTFS_SECRET_KEY: pulsepulse
+      RUSTFS_ADDRESS: "0.0.0.0:9000"
+      RUSTFS_CONSOLE_ADDRESS: "0.0.0.0:9001"
+      RUSTFS_CONSOLE_ENABLE: "true"
+      RUSTFS_VOLUMES: /data
+    ports:
+      - "32900:9000"
+      - "32901:9001"
+    volumes:
+      - rustfs_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+
+  pulse:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pulse-server
+    restart: unless-stopped
+    command: ["dev", "--config", "/configs/dev.yaml"]
+    environment:
+      PULSE_DEV_MODE: "1"
+      PULSE_SEED_DEMO: "1"
+      PULSE_AUTO_MIGRATE: "1"
+    ports:
+      - "32001:32001"  # WebSocket gateway
+      - "32003:32003"  # Gateway admin
+      - "32011:32011"  # REST API
+    volumes:
+      - ./configs/dev.yaml:/configs/dev.yaml:ro
+      - ./migrations:/migrations:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_healthy
+      rustfs:
+        condition: service_healthy
+
+volumes:
+  pg_data:
+  nats_data:
+  rustfs_data:
+

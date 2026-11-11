@@ -1,0 +1,69 @@
+# Pulse dev config — used by `pulse dev` and the docker-compose setup.
+# Override secrets via env vars in production.
+
+version: dev
+
+cell:
+  id: cell-0
+  region: local
+  user_shard_from: 0
+  user_shard_to: 100000
+
+roles:
+  cell: true
+  gateway: true
+  storage: true
+  license: true
+  admin: true
+
+postgres:
+  host: localhost          # set to localhost when running outside docker
+  port: 32432
+  database: pulse
+  user: pulse
+  password: pulse
+  ssl_mode: disable
+  max_conns: 20
+  min_conns: 2
+  migrations_path: migrations
+
+nats:
+  url: nats://localhost:32222     # set to nats://localhost:32222 outside docker
+  cluster_id: pulse-cluster
+  cell_id: cell-0
+  stream_prefix: pulse
+
+object_storage:
+  backend: s3
+  endpoint: localhost:32900
+  region: us-east-1
+  bucket: pulse-media
+  access_key: pulse
+  secret_key: pulsepulse
+  public_url: http://localhost:32900/pulse-media
+
+auth:
+  jwt_secret: dev-secret-change-me-in-production-32chars
+  user_token_ttl_seconds: 2592000   # 30d
+  admin_token_ttl_seconds: 31536000 # 1y
+
+log:
+  level: debug
+  format: text               # json for prod
+
+api:
+  listen: ":32011"
+  base_url: http://localhost:32011
+
+gateway:
+  listen: ":32001"
+  admin_listen: ":32003"
+  subprotocol: pulse.protocol.v1.msgpack
+  heartbeat_seconds: 10
+  max_conns: 50000
+  session_ttl_seconds: 2592000
+  handoff_enabled: true
+
+license:
+  mode: self-hosted
+  cache_ttl_seconds: 3600

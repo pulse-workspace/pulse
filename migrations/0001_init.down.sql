@@ -1,0 +1,54 @@
+-- 0001_init.down.sql
+-- Rollback for unified initial schema. Use with caution — drops all tables.
+
+DROP TABLE IF EXISTS tenant_webhooks CASCADE;
+DROP TABLE IF EXISTS tenant_usage_daily CASCADE;
+DROP TABLE IF EXISTS tenant_api_keys CASCADE;
+DROP TABLE IF EXISTS tenants CASCADE;
+
+DROP TRIGGER IF EXISTS trg_bridges_set_updated_at ON bridges;
+DROP FUNCTION IF EXISTS bridges_set_updated_at;
+DROP TABLE IF EXISTS bridge_chat_mappings CASCADE;
+DROP TABLE IF EXISTS bridges CASCADE;
+
+DROP TABLE IF EXISTS whitelabel_templates CASCADE;
+DROP TABLE IF EXISTS whitelabel_config CASCADE;
+
+DROP TABLE IF EXISTS backup_audit CASCADE;
+DROP TABLE IF EXISTS backup_runs CASCADE;
+
+DROP TABLE IF EXISTS mfa_credentials CASCADE;
+
+DROP TABLE IF EXISTS user_org_memberships CASCADE;
+DROP TABLE IF EXISTS org_units CASCADE;
+DROP TABLE IF EXISTS user_roles CASCADE;
+DROP TABLE IF EXISTS role_permissions CASCADE;
+DROP TABLE IF EXISTS roles CASCADE;
+DROP TABLE IF EXISTS dsr_requests CASCADE;
+DROP TABLE IF EXISTS retention_policies CASCADE;
+DROP TABLE IF EXISTS legal_holds CASCADE;
+
+DROP TABLE IF EXISTS idp_group_mappings CASCADE;
+DROP TABLE IF EXISTS scim_groups CASCADE;
+DROP TABLE IF EXISTS scim_tokens CASCADE;
+DROP TABLE IF EXISTS sso_links CASCADE;
+DROP TABLE IF EXISTS idp_providers CASCADE;
+
+DROP TABLE IF EXISTS license_cache CASCADE;
+DROP TABLE IF EXISTS admins CASCADE;
+DROP TABLE IF EXISTS media_attachments CASCADE;
+DROP TABLE IF EXISTS outbox CASCADE;
+DROP TABLE IF EXISTS projection_offsets CASCADE;
+DROP TABLE IF EXISTS events CASCADE;
+DROP TABLE IF EXISTS user_sessions CASCADE;
+DROP TABLE IF EXISTS blacklists CASCADE;
+DROP TABLE IF EXISTS friendships CASCADE;
+DROP TABLE IF EXISTS reactions CASCADE;
+DROP TABLE IF EXISTS messages CASCADE;
+DROP TABLE IF EXISTS conversation_pins CASCADE;
+DROP TABLE IF EXISTS conversation_unread CASCADE;
+DROP TABLE IF EXISTS conversations CASCADE;
+DROP TABLE IF EXISTS group_members CASCADE;
+DROP TABLE IF EXISTS groups CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS pulse_schema_version CASCADE;

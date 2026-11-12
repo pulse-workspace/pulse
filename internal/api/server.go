@@ -13,6 +13,7 @@ import (
 	"github.com/pulse-workspace/pulse/internal/api/handlers"
 	"github.com/pulse-workspace/pulse/internal/cell/conversation"
 	"github.com/pulse-workspace/pulse/internal/cell/group"
+	"github.com/pulse-workspace/pulse/internal/cell/push"
 	"github.com/pulse-workspace/pulse/internal/cell/user"
 	"github.com/pulse-workspace/pulse/pkg/shared/authn"
 	"github.com/pulse-workspace/pulse/pkg/shared/config"
@@ -34,6 +35,7 @@ type Server struct {
 	Users          *user.Service
 	Conversations  *conversation.Service
 	Groups         *group.Service
+	Push           *push.Service
 	Media          handlers.MediaService
 	Search         handlers.SearchService
 	Friend         handlers.FriendService
@@ -80,6 +82,9 @@ func (s *Server) SetSearch(sr handlers.SearchService) { s.Search = sr }
 
 // SetFriend wires the friend-management surface.
 func (s *Server) SetFriend(f handlers.FriendService) { s.Friend = f }
+
+// SetPush wires the push notification service.
+func (s *Server) SetPush(p *push.Service) { s.Push = p }
 
 // SetAdminPasswords wires the admin password validator.
 func (s *Server) SetAdminPasswords(pw handlers.AdminPasswordLookup) { s.adminPasswords = pw }
@@ -194,6 +199,15 @@ func (s *Server) routes() http.Handler {
 			r.With(authn.RequireUser(s.Issuer, s.Log)).Get("/requests/outgoing", handlers.FriendRequests(s.Friend))
 			r.With(authn.RequireUser(s.Issuer, s.Log)).Delete("/{friendID}", handlers.FriendRemove(s.Friend, s.Log))
 		})
+
+		// Mobile push notification device token registry (OSS)
+		if s.Push != nil {
+			r.Route("/devices", func(r chi.Router) {
+				r.With(authn.RequireUser(s.Issuer, s.Log)).Post("/register", handlers.DeviceRegister(s.Push, s.Log))
+				r.With(authn.RequireUser(s.Issuer, s.Log)).Post("/unregister", handlers.DeviceUnregister(s.Push, s.Log))
+				r.With(authn.RequireUser(s.Issuer, s.Log)).Get("/", handlers.DeviceList(s.Push, s.Log))
+			})
+		}
 
 		// Mount extension plugins (SSO, Compliance, RBAC, etc.) if loaded
 		cellBundle := s.CoreCell()

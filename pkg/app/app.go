@@ -22,6 +22,7 @@ import (
 	"github.com/pulse-workspace/pulse/internal/cell/message"
 	"github.com/pulse-workspace/pulse/internal/cell/presence"
 	"github.com/pulse-workspace/pulse/internal/cell/projection"
+	"github.com/pulse-workspace/pulse/internal/cell/push"
 	"github.com/pulse-workspace/pulse/internal/cell/reaction"
 	"github.com/pulse-workspace/pulse/internal/cell/routing"
 	"github.com/pulse-workspace/pulse/internal/cell/search"
@@ -166,6 +167,11 @@ func runWithRoles(cmd *cobra.Command, roles []string, appName, appVersion string
 	groupSvc := group.NewService(c)
 	rxnSvc := reaction.NewService(c)
 	presSvc := presence.NewService(c)
+	pushRepo := push.NewRepository(d)
+	pushSvc := push.NewService(c, pushRepo, presSvc)
+	pushSvc.RegisterDriver(push.NewMockDriver(push.PlatformFCM))
+	pushSvc.RegisterDriver(push.NewMockDriver(push.PlatformAPNs))
+	pushSvc.RegisterDriver(push.NewMockDriver(push.PlatformWebPush))
 	typingSvc := typing.NewService(c, nil)
 	friendSvc := friend.NewService(c)
 	searchSvc := search.NewService(c)
@@ -208,7 +214,7 @@ func runWithRoles(cmd *cobra.Command, roles []string, appName, appVersion string
 		log.Info().Msg("starting cell role (domain services)")
 		svcs := []cell.Service{
 			userSvc, msgSvc, convSvc, groupSvc, friendSvc, rxnSvc, presSvc,
-			typingSvc, routerSvc, searchSvc, projectionRunner,
+			pushSvc, typingSvc, routerSvc, searchSvc, projectionRunner,
 		}
 		if mediaSvc != nil {
 			svcs = append(svcs, mediaSvc)
@@ -232,6 +238,7 @@ func runWithRoles(cmd *cobra.Command, roles []string, appName, appVersion string
 	}
 	apiServer.SetSearch(searchSvc)
 	apiServer.SetFriend(friendSvc)
+	apiServer.SetPush(pushSvc)
 
 	apiErrCh := make(chan error, 1)
 	go func() {
@@ -278,48 +285,5 @@ func runWithRoles(cmd *cobra.Command, roles []string, appName, appVersion string
 
 	log.Info().Msg(appName + " stopped cleanly")
 	return nil
-}
-
-func containsRole(roles []string, want string) bool {
-	for _, r := range roles {
-		if r == want {
-			return true
-		}
-	}
-	return false
-}
-
-func maskDSN(dsn string) string {
-	atIdx := -1
-	for i := 0; i < len(dsn)-1; i++ {
-		if dsn[i] == '@' {
-			atIdx = i
-			break
-		}
-	}
-	if atIdx == -1 {
-		return dsn
-	}
-	colonIdx := -1
-	for i := 0; i < atIdx; i++ {
-		if dsn[i] == ':' && i > 7 {
-			colonIdx = i
-			break
-		}
-	}
-	if colonIdx == -1 {
-		return dsn
-	}
-	return dsn[:colonIdx+1] + "***" + dsn[atIdx:]
-}
-
-func verifyAdminPassword(ctx context.Context, d *db.DB, userID, password string) (bool, error) {
-	var hash string
-	err := d.QueryRow(ctx,
-		`SELECT password_hash FROM pulse_admins WHERE user_id = $1`, userID).Scan(&hash)
-	if err != nil {
-		return false, nil
-	}
-	return handlers.VerifyAdminPasswordHash(password, hash), nil
 }
 

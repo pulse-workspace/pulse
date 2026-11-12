@@ -6,44 +6,51 @@ Pulse is engineered as a **single binary, multi-role** distributed messaging eng
 
 ## High-Level Topology
 
-```
-                ┌─────────────────────────────────────────────┐
-                │             Clients / SDKs                  │
-                └──────────────────────┬──────────────────────┘
-                                       │ MsgPack over WebSocket
-                                       ▼
-         ┌─────────────────────────────────────────────────────────┐
-         │ Gateway Role (:32001)                                   │
-         │ - WebSocket termination and binary framing              │
-         │ - JWT authentication validation                         │
-         │ - NATS KV session directory lookup                      │
-         │ - Stateless session handoff                             │
-         └─────────────┬───────────────────────────┬───────────────┘
-                       │ write command             │ route message
-                       ▼                           ▼
-         ┌─────────────────────────────────────────────────────────┐
-         │ NATS JetStream                                          │
-         │ - Stream: events.messages                               │
-         │ - Subjects: pulse.route.<targetCell>                    │
-         │ - KeyValue: pulse_directory                             │
-         └─────────────────────────────┬───────────────────────────┘
-                                       │ pull stream
-                                       ▼
-         ┌─────────────────────────────────────────────────────────┐
-         │ Domain Cell Role (:32011)                               │
-         │ - Domains: User, Group, Friend, Conversation, Message   │
-         │ - Presence & Typing indicators                          │
-         │ - S3-compatible attachment facade                       │
-         │ - Full-text search with PostgreSQL GIN                  │
-         │ - Monotonic gapless sequence generator (convSeq)        │
-         └─────────────────────────────┬───────────────────────────┘
-                                       │ async projections
-                                       ▼
-         ┌─────────────────────────────────────────────────────────┐
-         │ PostgreSQL 16 (Durable Read Model)                      │
-         │ - Messages, conversations, unread counters              │
-         │ - User profiles, group memberships, friendship graph    │
-         └─────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph Clients["Clients & Edge SDKs"]
+        direction LR
+        Web["Web Messenger (React / Vue)"]
+        Mobile["Mobile SDK (Flutter / React Native)"]
+        Backend["Backend Service (Go / Node.js)"]
+    end
+
+    subgraph Cluster["Pulse Distributed Cluster"]
+        direction TB
+
+        subgraph GatewayTier["Stateless Gateway Role (:32001)"]
+            GW["WebSocket Terminator\n(MsgPack Framing & Auth)"]
+            DirLookup["Session Directory Lookup\n(pulse_directory KV)"]
+        end
+
+        subgraph EventPlane["Event Streaming Backbone (NATS JetStream)"]
+            JS_Events[("Event Log Stream\nevents.messages")]
+            JS_KV[("Distributed Directory\nUser Session Index")]
+        end
+
+        subgraph DomainTier["Autonomous Domain Cells (:32011)"]
+            Cell["Cell Domain Engine\n(Conv, Msg, Group, Presence)"]
+            Seq["Monotonic Gapless Sequencer\n(convSeq Generator)"]
+            Runner["Async Projection Runner\n(Event Materializer)"]
+        end
+
+        subgraph StorageTier["Persistence & Media Tier"]
+            DB[("PostgreSQL 16\nDurable Read Projections")]
+            S3[("S3 Storage / RustFS\nBinary Attachments & Media")]
+        end
+    end
+
+    Clients ==>|"MsgPack over WebSocket"| GW
+    GW -->|"Query Active Node"| DirLookup
+    DirLookup <-->|"Zero-Broadcast Lookup"| JS_KV
+    GW -->|"1. Append Event"| JS_Events
+
+    JS_Events -->|"2. Targeted Dispatch"| Cell
+    Cell -->|"Atomic Counter"| Seq
+    Cell -->|"Presigned Upload"| S3
+
+    JS_Events -.->|"3. Async Stream"| Runner
+    Runner -->|"Materialize View"| DB
 ```
 
 ---

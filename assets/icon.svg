@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="pulseIconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F2FE" />
+      <stop offset="50%" stop-color="#4FACFE" />
+      <stop offset="100%" stop-color="#6B11FF" />
+    </linearGradient>
+    <filter id="iconGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Squircle Base -->
+  <rect x="10" y="10" width="180" height="180" rx="46" fill="#0F172A" stroke="url(#pulseIconGrad)" stroke-width="4" />
+  <rect x="20" y="20" width="160" height="160" rx="36" fill="#1E293B" fill-opacity="0.6" />
+
+  <!-- Dynamic Waveform -->
+  <path d="M 32 100 L 65 100 L 78 65 L 94 135 L 112 45 L 126 145 L 138 100 L 168 100" 
+        fill="none" 
+        stroke="url(#pulseIconGrad)" 
+        stroke-width="7" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        filter="url(#iconGlow)" />
+
+  <circle cx="112" cy="45" r="5" fill="#00F2FE" />
+  <circle cx="126" cy="145" r="5" fill="#6B11FF" />
+</svg>
+

@@ -1,30 +1,100 @@
-# Pulse
+<p align="center">
+  <img src="assets/logo.svg" alt="Pulse Logo" width="620">
+</p>
 
-> **Ultra-fast, Distributed, Cloud-Native Instant Messaging Platform**
-> Single binary, multi-role, cell-based sharding with event sourcing.
+<p align="center">
+  <strong>Ultra-fast, Distributed, Cloud-Native Instant Messaging Platform</strong><br>
+  Single binary &bull; Autonomous cell sharding &bull; CQRS & Event Sourcing &bull; Microsecond latency
+</p>
 
-[![Go Version](https://img.shields.io/badge/go-1.22+-blue.svg)](https://golang.org)
-[![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE)
-[![NATS JetStream](https://img.shields.io/badge/messaging-NATS%20JetStream-0080FF.svg)](https://nats.io)
-[![PostgreSQL](https://img.shields.io/badge/database-PostgreSQL%2016-336791.svg)](https://www.postgresql.org)
+<p align="center">
+  <a href="https://golang.org"><img src="https://img.shields.io/badge/go-1.22+-00ADD8.svg?style=flat-square&logo=go" alt="Go Version"></a>
+  <a href="https://nats.io"><img src="https://img.shields.io/badge/NATS-JetStream-27AAE1.svg?style=flat-square&logo=nats.io" alt="NATS JetStream"></a>
+  <a href="https://www.postgresql.org"><img src="https://img.shields.io/badge/PostgreSQL-16-4169E1.svg?style=flat-square&logo=postgresql" alt="PostgreSQL 16"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-10B981.svg?style=flat-square" alt="License"></a>
+  <a href="./docs/en/index.md"><img src="https://img.shields.io/badge/docs-English%20%7C%20Việt-8B5CF6.svg?style=flat-square" alt="Documentation"></a>
+</p>
 
-Pulse is an enterprise-ready, open-source instant messaging engine designed for high throughput, predictable microsecond latencies, and horizontal cell-based scalability. Built from the ground up in Go, Pulse eliminates microservice spaghetti by packaging domain logic, WebSocket termination, and stream processing into a unified, modular architecture.
+---
+
+Pulse is an enterprise-grade, high-throughput instant messaging engine designed for massive concurrent connections and predictable sub-millisecond latencies. 
+
+Instead of brittle, hard-to-maintain microservice meshes, Pulse employs an **autonomous cell architecture** packaged in a **single binary**. It cleanly decouples connection termination (Gateway) from business logic (Domain Cells) and asynchronous materialization (Projection Runners) via **NATS JetStream** and **PostgreSQL 16**.
+
+---
+
+## Architecture Overview
+
+Pulse replaces legacy microservice topologies with autonomous cells and event-driven streaming:
+
+```mermaid
+flowchart TD
+    subgraph Clients["Clients & Edge SDKs"]
+        direction LR
+        Web["Web Messenger\n(React / Vue)"]
+        Mobile["Mobile SDK\n(Flutter / React Native)"]
+        Backend["Backend Service\n(Go / Node.js)"]
+    end
+
+    subgraph Cluster["Pulse Distributed Cluster"]
+        direction TB
+
+        subgraph GatewayTier["Stateless Gateway Role (:32001)"]
+            GW["WebSocket Terminator\n(MsgPack Framing & Auth)"]
+            DirLookup["Session Directory Lookup\n(pulse_directory KV)"]
+        end
+
+        subgraph EventPlane["Event Streaming Backbone (NATS JetStream)"]
+            JS_Events[("Event Log Stream\nevents.messages")]
+            JS_KV[("Distributed Directory\nUser Session Index")]
+        end
+
+        subgraph DomainTier["Autonomous Domain Cells (:32011)"]
+            Cell["Cell Domain Engine\n(Conv, Msg, Group, Presence)"]
+            Seq["Monotonic Gapless Sequencer\n(convSeq Generator)"]
+            Runner["Async Projection Runner\n(Event Materializer)"]
+        end
+
+        subgraph StorageTier["Persistence & Media Tier"]
+            DB[("PostgreSQL 16\nDurable Read Projections")]
+            S3[("S3 Storage / RustFS\nBinary Attachments & Media")]
+        end
+    end
+
+    Clients ==>|"MsgPack over WebSocket"| GW
+    GW -->|"Query Active Node"| DirLookup
+    DirLookup <-->|"Zero-Broadcast Lookup"| JS_KV
+    GW -->|"1. Append Event"| JS_Events
+
+    JS_Events -->|"2. Targeted Dispatch"| Cell
+    Cell -->|"Atomic Counter"| Seq
+    Cell -->|"Presigned Upload"| S3
+
+    JS_Events -.->|"3. Async Stream"| Runner
+    Runner -->|"Materialize View"| DB
+```
+
+### Core Processing Paths
+
+1. **Write Path (Command)**: Gateway accepts incoming WebSocket binary frames $\rightarrow$ verifies JWT token $\rightarrow$ appends immutable events into NATS JetStream `events.messages`.
+2. **Targeted Routing**: Distributed directory lookup (`pulse_directory` KV) maps recipients to their active gateway nodes $\rightarrow$ eliminates cluster-wide broadcast amplification.
+3. **Read Path (Query)**: Asynchronous Projection Runner streams NATS events and materializes PostgreSQL read models. Gapless monotonic ordering (`convSeq`) is enforced via atomic database sequence counters.
 
 ---
 
 ## Key Highlights
 
-- **Cell-Based Sharding**: Scale horizontally by partitioning traffic into autonomous cells, eliminating cluster-wide failure domains.
+- **Cell-Based Sharding**: Scale horizontally by partitioning users and conversations into independent, fault-isolated cells.
 - **CQRS + Event Sourcing**: Append-only event log backed by NATS JetStream with durable projections persisted in PostgreSQL 16.
 - **Strict Gapless Ordering**: Atomic DB-backed sequence counters guaranteeing strictly monotonic `convSeq` ordering per conversation without gaps.
-- **Targeted Distributed Routing**: Distributed user directory (`pulse_directory`) using NATS KeyValue store to route messages directly to active nodes—zero cross-cell broadcast amplification.
+- **Targeted Distributed Routing**: Distributed user directory (`pulse_directory`) using NATS KV to route messages directly to active nodes—zero cross-cell broadcast amplification.
 - **Seamless Session Handoff**: Stateless WebSocket gateways allow clients to reconnect to any node with zero message loss and instant catch-up sync.
 - **Single Binary, Multi-Role**: Deploy as an all-in-one process (`pulse dev`) or independently scale specific roles (`cell`, `gateway`).
 - **Clean Extensibility**: Modular extension system (`pkg/extension`) allowing commercial/enterprise plugins to mount cleanly without polluting the open-source core.
 
 ---
 
-## Quick Start
+## Quick Start (Under 60 Seconds)
 
 ### Prerequisites
 
@@ -39,22 +109,15 @@ Pulse is an enterprise-ready, open-source instant messaging engine designed for 
 docker compose up -d postgres nats rustfs
 ```
 
-### 2. Build the Pulse Binary
+### 2. Build & Apply Migrations
 
 ```bash
 make deps
 make build
-```
-
-### 3. Apply Schema Migrations
-
-Pulse consolidates all schema definitions into a single, clean migration file:
-
-```bash
 make migrate-up
 ```
 
-### 4. Run Pulse in Dev Mode
+### 3. Run Pulse in Dev Mode
 
 ```bash
 # Starts both cell (domain engine) and gateway (WebSocket termination)
@@ -96,42 +159,11 @@ wscat -c ws://localhost:32001 -s pulse.protocol.v1.msgpack \
 
 ---
 
-## Architecture Overview
-
-Pulse replaces brittle legacy microservice topologies with a unified cell architecture:
-
-```
-┌────────────────────────────────────────────────────────┐
-│                      PULSE CLUSTER                     │
-│                                                        │
-│  Cell-0 Node                                           │
-│  ┌──────────────┐   ┌──────────────┐   ┌────────────┐  │
-│  │ Gateway Role │   │ Domain Cell  │   │ Projection │  │
-│  │ (WebSocket)  │   │ (Msg/Conv/Grp)   │ Runner     │  │
-│  └──────┬───────┘   └──────┬───────┘   └─────┬──────┘  │
-│         │                  │                 │         │
-│         ▼                  ▼                 ▼         │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │         NATS JetStream (Events + KV Directory)   │  │
-│  └─────────────────────────┬────────────────────────┘  │
-│                            │ (async projections)       │
-│                            ▼                           │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │               PostgreSQL 16 (Durable DB)         │  │
-│  └──────────────────────────────────────────────────┘  │
-└────────────────────────────────────────────────────────┘
-```
-
-1. **Write Path (Command)**: Gateway accepts incoming WebSocket binary frame → validates token → writes event to NATS JetStream `events.messages`.
-2. **Targeted Routing**: Directory lookup (`usr.<userID>`) determines which cells host active recipients and dispatches to specific NATS subjects.
-3. **Read Path (Query)**: Async Projection Runner consumes NATS events and updates the PostgreSQL read model (`messages`, `conversation_unread`). Monotonic sequence counters are guaranteed via atomic row locking.
-
----
-
 ## Repository Layout
 
 ```
 pulse/
+├── assets/               # Brand assets (logo, icon, vector badges)
 ├── cmd/pulse/            # Pure OSS single binary entrypoint
 ├── internal/
 │   ├── cell/             # Domain engines (user, conversation, group, message, presence, friend, search, media)
@@ -164,7 +196,7 @@ Comprehensive guides and architecture documentation are available in `docs/`:
   - [Contributing](./docs/en/contributing.md)
 - 🇻🇳 **[Tài liệu Tiếng Việt](./docs/vi/index.md)**
 
-Production deployment configurations and Helm charts have been extracted into the companion repository [`pulse-deploy`](https://github.com/pulse-workspace/pulse-deploy).
+Production deployment configurations and Helm charts are maintained in [`pulse-deploy`](https://github.com/pulse-workspace/pulse-deploy).
 
 ---
 

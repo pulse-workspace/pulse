@@ -6,44 +6,51 @@ Pulse được thiết kế theo mô hình **Single Binary, Multi-Role** (một 
 
 ## Sơ đồ Tổng quan Cụm Pulse
 
-```
-                ┌─────────────────────────────────────────────┐
-                │               Ứng dụng / SDKs               │
-                └──────────────────────┬──────────────────────┘
-                                       │ MsgPack qua WebSocket
-                                       ▼
-         ┌─────────────────────────────────────────────────────────┐
-         │ Vai trò Gateway (:32001)                                │
-         │ - Điều phối kết nối WebSocket và giải mã nhị phân       │
-         │ - Kiểm tra và xác thực JWT Bearer token                 │
-         │ - Tra cứu phiên người dùng qua NATS KV directory        │
-         │ - Bàn giao phiên không trạng thái (stateless handoff)   │
-         └─────────────┬───────────────────────────┬───────────────┘
-                       │ ghi sự kiện               │ chuyển tiếp
-                       ▼                           ▼
-         ┌─────────────────────────────────────────────────────────┐
-         │ NATS JetStream                                          │
-         │ - Stream: events.messages                               │
-         │ - Subjects: pulse.route.<targetCell>                    │
-         │ - KeyValue: pulse_directory                             │
-         └─────────────────────────────┬───────────────────────────┘
-                                       │ tiêu thụ sự kiện
-                                       ▼
-         ┌─────────────────────────────────────────────────────────┐
-         │ Vai trò Domain Cell (:32011)                            │
-         │ - Miền nghiệp vụ: User, Group, Friend, Conv, Message    │
-         │ - Trạng thái trực tuyến (Presence) & Đang gõ (Typing)   │
-         │ - Đính kèm đa phương tiện chuẩn S3                      │
-         │ - Tìm kiếm toàn văn (FTS) với PostgreSQL GIN index      │
-         │ - Bộ đếm tuần tự không nhảy cóc (convSeq)               │
-         └─────────────────────────────┬───────────────────────────┘
-                                       │ cập nhật projection
-                                       ▼
-         ┌─────────────────────────────────────────────────────────┐
-         │ PostgreSQL 16 (Durable Read Model)                      │
-         │ - Bảng tin nhắn, hội thoại, số đếm tin chưa đọc         │
-         │ - Hồ sơ người dùng, thành viên nhóm, đồ thị bạn bè      │
-         └─────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph Clients["Ứng dụng Client & Edge SDKs"]
+        direction LR
+        Web["Web Messenger (React / Vue)"]
+        Mobile["Mobile SDK (Flutter / React Native)"]
+        Backend["Backend Service (Go / Node.js)"]
+    end
+
+    subgraph Cluster["Cụm Phân Tán Pulse"]
+        direction TB
+
+        subgraph GatewayTier["Vai Trò Gateway Không Trạng Thái (:32001)"]
+            GW["Điều phối WebSocket\n(MsgPack Framing & Auth JWT)"]
+            DirLookup["Tra cứu phiên người dùng\n(pulse_directory KV)"]
+        end
+
+        subgraph EventPlane["Xương Sống Truyền Phát Sự Kiện (NATS JetStream)"]
+            JS_Events[("Luồng sự kiện bất biến\nevents.messages")]
+            JS_KV[("Chỉ mục phiên phân tán\nUser Session Index")]
+        end
+
+        subgraph DomainTier["Vai Trò Domain Cell Độc Lập (:32011)"]
+            Cell["Động cơ miền nghiệp vụ\n(Conv, Msg, Group, Presence)"]
+            Seq["Bộ đếm tuần tự không nhảy cóc\n(convSeq Generator)"]
+            Runner["Async Projection Runner\n(Tiêu thụ & Cập nhật View)"]
+        end
+
+        subgraph StorageTier["Tầng Lưu Trữ Bền Vững & Media"]
+            DB[("PostgreSQL 16\nRead Projections bền vững")]
+            S3[("S3 Storage / RustFS\nLưu trữ tệp đính kèm & media")]
+        end
+    end
+
+    Clients ==>|"MsgPack qua WebSocket"| GW
+    GW -->|"Truy vấn Node đang giữ phiên"| DirLookup
+    DirLookup <-->|"Tra cứu trực tiếp (Không broadcast)"| JS_KV
+    GW -->|"1. Ghi nhận sự kiện"| JS_Events
+
+    JS_Events -->|"2. Chuyển tiếp có đích đến"| Cell
+    Cell -->|"Đếm tuần tự nguyên tử"| Seq
+    Cell -->|"Upload đính kèm"| S3
+
+    JS_Events -.->|"3. Luồng sự kiện bất đồng bộ"| Runner
+    Runner -->|"Cập nhật bảng chiếu"| DB
 ```
 
 ---

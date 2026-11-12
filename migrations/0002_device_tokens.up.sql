@@ -14,3 +14,4 @@ CREATE TABLE IF NOT EXISTS device_tokens (
 
 CREATE INDEX IF NOT EXISTS idx_device_tokens_user_active ON device_tokens(user_id, is_active);
 CREATE UNIQUE INDEX IF NOT EXISTS uniq_device_tokens_user_token ON device_tokens(user_id, token);
+

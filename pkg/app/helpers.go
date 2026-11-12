@@ -53,3 +53,4 @@ func verifyAdminPassword(ctx context.Context, d *db.DB, userID, password string)
 	}
 	return handlers.VerifyAdminPasswordHash(password, hash), nil
 }
+

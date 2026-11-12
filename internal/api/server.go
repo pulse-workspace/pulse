@@ -11,10 +11,13 @@ import (
 	chimiddleware "github.com/go-chi/chi/v5/middleware"
 
 	"github.com/pulse-workspace/pulse/internal/api/handlers"
+	"github.com/pulse-workspace/pulse/internal/cell/call"
+	"github.com/pulse-workspace/pulse/internal/cell/copilot"
 	"github.com/pulse-workspace/pulse/internal/cell/conversation"
 	"github.com/pulse-workspace/pulse/internal/cell/group"
 	"github.com/pulse-workspace/pulse/internal/cell/push"
 	"github.com/pulse-workspace/pulse/internal/cell/user"
+	"github.com/pulse-workspace/pulse/internal/cell/webhook"
 	"github.com/pulse-workspace/pulse/pkg/shared/authn"
 	"github.com/pulse-workspace/pulse/pkg/shared/config"
 	"github.com/pulse-workspace/pulse/pkg/shared/db"
@@ -36,6 +39,9 @@ type Server struct {
 	Conversations  *conversation.Service
 	Groups         *group.Service
 	Push           *push.Service
+	Call           *call.Service
+	Webhook        *webhook.Service
+	Copilot        *copilot.Service
 	Media          handlers.MediaService
 	Search         handlers.SearchService
 	Friend         handlers.FriendService
@@ -206,6 +212,31 @@ func (s *Server) routes() http.Handler {
 				r.With(authn.RequireUser(s.Issuer, s.Log)).Post("/register", handlers.DeviceRegister(s.Push, s.Log))
 				r.With(authn.RequireUser(s.Issuer, s.Log)).Post("/unregister", handlers.DeviceUnregister(s.Push, s.Log))
 				r.With(authn.RequireUser(s.Issuer, s.Log)).Get("/", handlers.DeviceList(s.Push, s.Log))
+			})
+		}
+
+		// WebRTC & Audio/Video calling (LiveKit SFU) (OSS)
+		if s.Call != nil {
+			r.Route("/calls", func(r chi.Router) {
+				r.With(authn.RequireUser(s.Issuer, s.Log)).Post("/token", handlers.CallToken(s.Call, s.Log))
+				r.With(authn.RequireUser(s.Issuer, s.Log)).Post("/signal", handlers.CallSignal(s.Call, s.Log))
+			})
+		}
+
+		// Outbound Webhooks & Event Gateway (OSS)
+		if s.Webhook != nil {
+			r.Route("/webhooks", func(r chi.Router) {
+				r.With(authn.RequireUser(s.Issuer, s.Log)).Post("/", handlers.WebhookCreate(s.Webhook, s.Log))
+				r.With(authn.RequireUser(s.Issuer, s.Log)).Get("/", handlers.WebhookList(s.Webhook, s.Log))
+				r.With(authn.RequireUser(s.Issuer, s.Log)).Delete("/{id}", handlers.WebhookDelete(s.Webhook, s.Log))
+			})
+		}
+
+		// AI Copilot & LLM Assistance (OSS)
+		if s.Copilot != nil {
+			r.Route("/copilot", func(r chi.Router) {
+				r.With(authn.RequireUser(s.Issuer, s.Log)).Post("/summary", handlers.CopilotSummary(s.Copilot, s.Log))
+				r.With(authn.RequireUser(s.Issuer, s.Log)).Post("/smart-replies", handlers.CopilotSmartReplies(s.Copilot, s.Log))
 			})
 		}
 

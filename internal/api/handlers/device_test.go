@@ -120,3 +120,4 @@ func TestDeviceList_Success(t *testing.T) {
 		t.Fatalf("expected 200 OK, got %d", w.Code)
 	}
 }
+

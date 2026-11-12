@@ -41,11 +41,21 @@ const (
 	FrameHandoffReq   uint16 = 102 // C→S — new gateway requests session takeover
 	FrameHandoffReady uint16 = 103 // S→C — old gateway snapshot ready
 	FrameHandoffDone  uint16 = 104 // C→S → S→C — handoff complete
+
+	// Audio / Video Calling & WebRTC signaling frames
+	FrameCallRing      uint16 = 110 // C→S / S→C — initiate or notify incoming call
+	FrameCallAccept    uint16 = 111 // C→S / S→C — accept call invitation
+	FrameCallReject    uint16 = 112 // C→S / S→C — reject or busy call
+	FrameCallHangup    uint16 = 113 // C→S / S→C — terminate active call
+	FrameCallCandidate uint16 = 114 // C→S / S→C — trickle ICE candidate exchange
 )
 
 // Event types appended to the event log.
 // Stable string identifiers; SDKs and server both reference these.
 const (
+	EventCallStarted = "CallStarted"
+	EventCallEnded   = "CallEnded"
+
 	EventUserCreated = "UserCreated"
 	EventUserUpdated = "UserUpdated"
 	EventUserDeleted = "UserDeleted"

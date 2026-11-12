@@ -2,3 +2,4 @@
 -- Description: Drops device_tokens table and associated indexes
 
 DROP TABLE IF EXISTS device_tokens CASCADE;
+

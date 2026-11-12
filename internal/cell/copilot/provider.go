@@ -17,3 +17,4 @@ type AIProvider interface {
 	// GenerateSmartReplies suggests 3 short quick-reply options for the latest message.
 	GenerateSmartReplies(ctx context.Context, messages []ThreadMessage) ([]string, error)
 }
+

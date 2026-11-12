@@ -149,3 +149,4 @@ func (g *GeminiProvider) generate(ctx context.Context, prompt string) (string, e
 
 	return parsed.Candidates[0].Content.Parts[0].Text, nil
 }
+

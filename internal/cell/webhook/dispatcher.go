@@ -71,3 +71,4 @@ func (d *Dispatcher) Deliver(ctx context.Context, hook *Webhook, payload *EventP
 	d.log.Debug().Int("status", resp.StatusCode).Str("url", hook.URL).Str("delivery_id", payload.DeliveryID).Msg("webhook delivered successfully")
 	return nil
 }
+

@@ -140,3 +140,4 @@ func (o *OpenAIProvider) complete(ctx context.Context, systemPrompt, userContent
 
 	return parsed.Choices[0].Message.Content, nil
 }
+

@@ -12,3 +12,4 @@ CREATE TABLE IF NOT EXISTS webhooks (
 
 CREATE INDEX IF NOT EXISTS idx_webhooks_tenant ON webhooks(tenant_id);
 CREATE INDEX IF NOT EXISTS idx_webhooks_active ON webhooks(is_active) WHERE is_active = true;
+

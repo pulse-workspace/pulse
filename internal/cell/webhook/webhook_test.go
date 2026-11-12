@@ -121,3 +121,4 @@ func TestService_Register(t *testing.T) {
 		t.Fatalf("expected 64-char hex secret, got length %d", len(secret))
 	}
 }
+

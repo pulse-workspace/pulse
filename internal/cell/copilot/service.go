@@ -52,3 +52,4 @@ func (s *Service) Summarize(ctx context.Context, messages []ThreadMessage) (stri
 func (s *Service) SmartReplies(ctx context.Context, messages []ThreadMessage) ([]string, error) {
 	return s.provider.GenerateSmartReplies(ctx, messages)
 }
+

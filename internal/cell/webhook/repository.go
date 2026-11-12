@@ -141,3 +141,4 @@ func (r *Repository) Delete(ctx context.Context, id string) error {
 	query := `DELETE FROM webhooks WHERE id = $1`
 	return r.db.Exec(ctx, query, id)
 }
+

@@ -54,3 +54,4 @@ func runSend(args []string) {
 	respBody, _ := io.ReadAll(res.Body)
 	fmt.Printf("HTTP %d: %s\n", res.StatusCode, string(respBody))
 }
+

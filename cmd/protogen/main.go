@@ -163,3 +163,4 @@ func generateDart(outPath string, frames, contentTypes []constantDef) error {
 	}
 	return os.WriteFile(outPath, []byte(sb.String()), 0644)
 }
+

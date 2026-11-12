@@ -40,3 +40,4 @@ func runToken(args []string) {
 
 	fmt.Printf("Issued JWT for user '%s':\n%s\n", *userId, tok)
 }
+

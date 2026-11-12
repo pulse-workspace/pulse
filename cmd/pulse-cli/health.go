@@ -40,3 +40,4 @@ func runHealth(args []string) {
 	body, _ := io.ReadAll(res.Body)
 	fmt.Printf("Status: %d %s | Latency: %v\nResponse: %s\n", res.StatusCode, http.StatusText(res.StatusCode), dur, string(body))
 }
+

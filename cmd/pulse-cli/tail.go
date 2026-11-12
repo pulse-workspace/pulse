@@ -79,3 +79,4 @@ func runTail(args []string) {
 		}
 	}
 }
+

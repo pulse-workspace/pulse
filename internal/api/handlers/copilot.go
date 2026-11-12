@@ -92,3 +92,4 @@ func CopilotSmartReplies(svc *copilot.Service, log logger.Logger) http.HandlerFu
 		})
 	}
 }
+

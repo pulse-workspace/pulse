@@ -36,3 +36,4 @@ func VerifySignature(payload []byte, secret string, expectedSignature string) bo
 	}
 	return hmac.Equal([]byte(actual), []byte(expectedSignature))
 }
+

@@ -91,3 +91,4 @@ func TestCopilotHandlers(t *testing.T) {
 		}
 	})
 }
+

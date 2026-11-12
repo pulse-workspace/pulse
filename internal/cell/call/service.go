@@ -150,3 +150,4 @@ func (s *Service) DispatchSignal(
 func (s *Service) GetLiveKitURL() string {
 	return s.cfg.LiveKitURL
 }
+

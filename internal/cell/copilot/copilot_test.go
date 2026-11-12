@@ -137,3 +137,4 @@ func TestOpenAIProvider(t *testing.T) {
 		t.Fatalf("unexpected summary: %s", summary)
 	}
 }
+

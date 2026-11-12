@@ -22,3 +22,4 @@ type EventPayload struct {
 	Timestamp  int64          `json:"timestamp"`
 	Data       map[string]any `json:"data"`
 }
+

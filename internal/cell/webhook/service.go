@@ -116,3 +116,4 @@ func (s *Service) BroadcastEvent(ctx context.Context, tenantID, event string, da
 
 	return nil
 }
+

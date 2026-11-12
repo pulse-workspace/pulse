@@ -17,9 +17,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/pulse-im/pulse/internal/cell/search"
-	"github.com/pulse-im/pulse/pkg/shared/authn"
-	"github.com/pulse-im/pulse/pkg/shared/logger"
+	"github.com/pulse-workspace/pulse/internal/cell/search"
+	"github.com/pulse-workspace/pulse/pkg/shared/authn"
+	"github.com/pulse-workspace/pulse/pkg/shared/logger"
 )
 
 // SearchService is the narrow handler-package view of *search.Service.

@@ -9,7 +9,7 @@ import (
 	"github.com/oklog/ulid/v2"
 	"github.com/stretchr/testify/require"
 
-	"github.com/pulse-im/pulse/pkg/core"
+	"github.com/pulse-workspace/pulse/pkg/core"
 )
 
 // TestMessageStructLayout documents the wire format that clients depend on.

@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/nats-io/nats.go/jetstream"
-	"github.com/pulse-im/pulse/pkg/shared/logger"
-	"github.com/pulse-im/pulse/pkg/shared/nats"
+	"github.com/pulse-workspace/pulse/pkg/shared/logger"
+	"github.com/pulse-workspace/pulse/pkg/shared/nats"
 )
 
 const (

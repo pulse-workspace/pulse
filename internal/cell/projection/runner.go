@@ -14,11 +14,11 @@ import (
 
 	"github.com/vmihailenco/msgpack/v5"
 
-	"github.com/pulse-im/pulse/internal/cell/eventsource"
-	"github.com/pulse-im/pulse/pkg/shared/db"
-	sharedevents "github.com/pulse-im/pulse/pkg/shared/events"
-	"github.com/pulse-im/pulse/pkg/shared/logger"
-	"github.com/pulse-im/pulse/pkg/shared/nats"
+	"github.com/pulse-workspace/pulse/internal/cell/eventsource"
+	"github.com/pulse-workspace/pulse/pkg/shared/db"
+	sharedevents "github.com/pulse-workspace/pulse/pkg/shared/events"
+	"github.com/pulse-workspace/pulse/pkg/shared/logger"
+	"github.com/pulse-workspace/pulse/pkg/shared/nats"
 )
 
 // Runner manages the lifecycle of one or more projectors.

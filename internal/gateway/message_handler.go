@@ -11,11 +11,11 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/vmihailenco/msgpack/v5"
 
-	"github.com/pulse-im/pulse/internal/cell/conversation"
-	"github.com/pulse-im/pulse/internal/cell/group"
-	"github.com/pulse-im/pulse/internal/cell/message"
-	"github.com/pulse-im/pulse/pkg/shared/logger"
-	"github.com/pulse-im/pulse/pkg/protocol"
+	"github.com/pulse-workspace/pulse/internal/cell/conversation"
+	"github.com/pulse-workspace/pulse/internal/cell/group"
+	"github.com/pulse-workspace/pulse/internal/cell/message"
+	"github.com/pulse-workspace/pulse/pkg/shared/logger"
+	"github.com/pulse-workspace/pulse/pkg/protocol"
 )
 
 // MessageHandler glues the gateway's WS connections to the cell message service.

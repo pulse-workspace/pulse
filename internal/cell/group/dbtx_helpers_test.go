@@ -26,7 +26,7 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/rs/zerolog"
 
-	"github.com/pulse-im/pulse/internal/cell"
+	"github.com/pulse-workspace/pulse/internal/cell"
 )
 
 // svcWithFake builds a Service wired to a FakeTx. nats is left nil —

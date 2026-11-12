@@ -8,7 +8,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 
-	"github.com/pulse-im/pulse/internal/cell"
+	"github.com/pulse-workspace/pulse/internal/cell"
 )
 
 // buildSvc constructs a *Service with no DB/NATS. Tests in this file

@@ -14,7 +14,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 
-	"github.com/pulse-im/pulse/pkg/shared/config"
+	"github.com/pulse-workspace/pulse/pkg/shared/config"
 )
 
 func nopLogger() zerolog.Logger { return zerolog.Nop() }

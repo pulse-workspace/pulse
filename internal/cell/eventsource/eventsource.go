@@ -18,10 +18,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/pulse-im/pulse/pkg/shared/db"
-	"github.com/pulse-im/pulse/pkg/shared/events"
-	"github.com/pulse-im/pulse/pkg/shared/logger"
-	"github.com/pulse-im/pulse/pkg/shared/nats"
+	"github.com/pulse-workspace/pulse/pkg/shared/db"
+	"github.com/pulse-workspace/pulse/pkg/shared/events"
+	"github.com/pulse-workspace/pulse/pkg/shared/logger"
+	"github.com/pulse-workspace/pulse/pkg/shared/nats"
 	"github.com/vmihailenco/msgpack/v5"
 )
 

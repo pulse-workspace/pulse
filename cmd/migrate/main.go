@@ -16,8 +16,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/pulse-im/pulse/pkg/shared/config"
-	"github.com/pulse-im/pulse/pkg/shared/db"
+	"github.com/pulse-workspace/pulse/pkg/shared/config"
+	"github.com/pulse-workspace/pulse/pkg/shared/db"
 )
 
 func main() {

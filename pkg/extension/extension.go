@@ -6,7 +6,7 @@ import (
 	"context"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/pulse-im/pulse/pkg/core"
+	"github.com/pulse-workspace/pulse/pkg/core"
 )
 
 // Plugin is the contract for enterprise and third-party extensions.

@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"sync"
 
-	"github.com/pulse-im/pulse/pkg/shared/logger"
+	"github.com/pulse-workspace/pulse/pkg/shared/logger"
 )
 
 // HandoffEvent is published to subscribers when a session moves

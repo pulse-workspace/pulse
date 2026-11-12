@@ -5,12 +5,12 @@
 package cell
 
 import (
-	"github.com/pulse-im/pulse/pkg/core"
-	"github.com/pulse-im/pulse/pkg/shared/authn"
-	"github.com/pulse-im/pulse/pkg/shared/config"
-	"github.com/pulse-im/pulse/pkg/shared/db"
-	"github.com/pulse-im/pulse/pkg/shared/logger"
-	"github.com/pulse-im/pulse/pkg/shared/nats"
+	"github.com/pulse-workspace/pulse/pkg/core"
+	"github.com/pulse-workspace/pulse/pkg/shared/authn"
+	"github.com/pulse-workspace/pulse/pkg/shared/config"
+	"github.com/pulse-workspace/pulse/pkg/shared/db"
+	"github.com/pulse-workspace/pulse/pkg/shared/logger"
+	"github.com/pulse-workspace/pulse/pkg/shared/nats"
 )
 
 // Cell bundles all dependencies a per-cell service needs.

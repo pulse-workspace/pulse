@@ -24,8 +24,8 @@ import (
 	"github.com/oklog/ulid/v2"
 	"github.com/stretchr/testify/require"
 
-	"github.com/pulse-im/pulse/pkg/shared/db"
-	"github.com/pulse-im/pulse/pkg/core"
+	"github.com/pulse-workspace/pulse/pkg/shared/db"
+	"github.com/pulse-workspace/pulse/pkg/core"
 )
 
 // heldStub satisfies complianceChecker with a pre-canned answer; counts

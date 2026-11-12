@@ -32,10 +32,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/pulse-im/pulse/internal/cell/message"
-	"github.com/pulse-im/pulse/internal/cell/presence"
-	"github.com/pulse-im/pulse/internal/cell/reaction"
-	"github.com/pulse-im/pulse/pkg/shared/logger"
+	"github.com/pulse-workspace/pulse/internal/cell/message"
+	"github.com/pulse-workspace/pulse/internal/cell/presence"
+	"github.com/pulse-workspace/pulse/internal/cell/reaction"
+	"github.com/pulse-workspace/pulse/pkg/shared/logger"
 )
 
 // ServiceDeps is the narrow interface the default handlers need to

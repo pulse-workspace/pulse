@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/pulse-im/pulse/pkg/shared/logger"
+	"github.com/pulse-workspace/pulse/pkg/shared/logger"
 )
 
 type ctxKey int

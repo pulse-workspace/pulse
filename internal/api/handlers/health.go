@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/pulse-im/pulse/internal/cell/user"
-	"github.com/pulse-im/pulse/pkg/shared/authn"
-	"github.com/pulse-im/pulse/pkg/shared/logger"
+	"github.com/pulse-workspace/pulse/internal/cell/user"
+	"github.com/pulse-workspace/pulse/pkg/shared/authn"
+	"github.com/pulse-workspace/pulse/pkg/shared/logger"
 )
 
 // Health returns 200 with a small JSON payload.

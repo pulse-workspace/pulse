@@ -164,7 +164,7 @@ Comprehensive guides and architecture documentation are available in `docs/`:
   - [Contributing](./docs/en/contributing.md)
 - 🇻🇳 **[Tài liệu Tiếng Việt](./docs/vi/index.md)**
 
-Production deployment configurations and Helm charts have been extracted into the companion repository [`pulse-deploy`](https://github.com/pulse-im/pulse-deploy).
+Production deployment configurations and Helm charts have been extracted into the companion repository [`pulse-deploy`](https://github.com/pulse-workspace/pulse-deploy).
 
 ---
 
@@ -186,4 +186,3 @@ make build
 ## License
 
 This repository is licensed under the [Apache License, Version 2.0](LICENSE).
-Commercial enterprise extensions (SSO, Compliance, RBAC, Automated Backup) are available in the `pulse-enterprise` repository under the Polyform Commercial License.

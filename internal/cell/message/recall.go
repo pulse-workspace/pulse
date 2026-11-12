@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/pulse-im/pulse/pkg/shared/events"
+	"github.com/pulse-workspace/pulse/pkg/shared/events"
 )
 
 // RecallMessage marks a message as revoked and publishes a MessageRecalled event.

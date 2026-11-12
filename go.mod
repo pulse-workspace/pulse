@@ -1,4 +1,4 @@
-module github.com/pulse-im/pulse
+module github.com/pulse-workspace/pulse
 
 go 1.25.0
 

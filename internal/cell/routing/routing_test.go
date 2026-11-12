@@ -7,7 +7,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 
-	"github.com/pulse-im/pulse/internal/cell"
+	"github.com/pulse-workspace/pulse/internal/cell"
 )
 
 // buildCell constructs a *cell.Cell with cfg/log populated and nil DB / NATS.

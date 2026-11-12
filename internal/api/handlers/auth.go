@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/pulse-im/pulse/pkg/shared/authn"
-	"github.com/pulse-im/pulse/pkg/shared/logger"
+	"github.com/pulse-workspace/pulse/pkg/shared/authn"
+	"github.com/pulse-workspace/pulse/pkg/shared/logger"
 )
 
 // adminPasswordLookup is the narrow password-validation contract.

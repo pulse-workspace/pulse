@@ -8,8 +8,8 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 
-	"github.com/pulse-im/pulse/internal/cell"
-	"github.com/pulse-im/pulse/pkg/shared/config"
+	"github.com/pulse-workspace/pulse/internal/cell"
+	"github.com/pulse-workspace/pulse/pkg/shared/config"
 )
 
 type recordedPublish struct {

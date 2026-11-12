@@ -6,10 +6,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/pulse-im/pulse/internal/cell/conversation"
-	"github.com/pulse-im/pulse/pkg/shared/authn"
-	"github.com/pulse-im/pulse/pkg/shared/logger"
-	"github.com/pulse-im/pulse/pkg/protocol"
+	"github.com/pulse-workspace/pulse/internal/cell/conversation"
+	"github.com/pulse-workspace/pulse/pkg/shared/authn"
+	"github.com/pulse-workspace/pulse/pkg/shared/logger"
+	"github.com/pulse-workspace/pulse/pkg/protocol"
 )
 
 // ConversationCreateRequest is the body for /conversation/create.

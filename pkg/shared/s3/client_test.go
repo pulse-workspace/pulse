@@ -14,8 +14,8 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 
-	"github.com/pulse-im/pulse/pkg/shared/config"
-	"github.com/pulse-im/pulse/pkg/shared/logger"
+	"github.com/pulse-workspace/pulse/pkg/shared/config"
+	"github.com/pulse-workspace/pulse/pkg/shared/logger"
 )
 
 // nopLog returns a zerolog-backed logger that drops everything.

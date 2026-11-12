@@ -11,9 +11,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/pulse-im/pulse/internal/cell"
-	"github.com/pulse-im/pulse/pkg/shared/logger"
-	"github.com/pulse-im/pulse/pkg/shared/nats"
+	"github.com/pulse-workspace/pulse/internal/cell"
+	"github.com/pulse-workspace/pulse/pkg/shared/logger"
+	"github.com/pulse-workspace/pulse/pkg/shared/nats"
 )
 
 // Status is the online/offline enum.

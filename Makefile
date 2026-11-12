@@ -99,12 +99,12 @@ docker:
 
 ## docker-build: Build with explicit tag
 docker-build:
-	docker build -t pulse-im/pulse:$(VERSION) -t pulse-im/pulse:latest -f Dockerfile .
+	docker build -t pulse-workspace/pulse:$(VERSION) -t pulse-workspace/pulse:latest -f Dockerfile .
 
 ## docker-push: Push to registry
 docker-push:
-	docker push pulse-im/pulse:$(VERSION)
-	docker push pulse-im/pulse:latest
+	docker push pulse-workspace/pulse:$(VERSION)
+	docker push pulse-workspace/pulse:latest
 
 ## migrate-up: Apply database migrations
 migrate-up:

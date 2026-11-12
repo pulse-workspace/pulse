@@ -2,7 +2,7 @@
 
 This suite defines the **behavioural contract** every Pulse SDK must satisfy.
 
-It runs against a live Pulse server (see `pulse-im/pulse` for setup) and validates
+It runs against a live Pulse server (see `pulse-workspace/pulse` for setup) and validates
 that each SDK correctly implements the protocol — regardless of language.
 
 ## What's covered

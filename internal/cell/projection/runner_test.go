@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/vmihailenco/msgpack/v5"
 
-	"github.com/pulse-im/pulse/pkg/shared/events"
+	"github.com/pulse-workspace/pulse/pkg/shared/events"
 )
 
 // Tests below focus on the offset-tracking side of the runner —

@@ -25,9 +25,9 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/pulse-im/pulse/internal/cell/media"
-	"github.com/pulse-im/pulse/pkg/shared/authn"
-	"github.com/pulse-im/pulse/pkg/shared/logger"
+	"github.com/pulse-workspace/pulse/internal/cell/media"
+	"github.com/pulse-workspace/pulse/pkg/shared/authn"
+	"github.com/pulse-workspace/pulse/pkg/shared/logger"
 )
 
 // MediaService is the narrow handler-package view of *media.Service.

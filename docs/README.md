@@ -1,6 +1,6 @@
 # Pulse Documentation Hub
 
-This directory contains technical documentation and architecture guides for the [Pulse](https://github.com/pulse-im/pulse) IM Platform.
+This directory contains technical documentation and architecture guides for the [Pulse](https://github.com/pulse-workspace/pulse) IM Platform.
 
 ---
 

@@ -8,9 +8,9 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 
-	"github.com/pulse-im/pulse/internal/cell/message"
-	"github.com/pulse-im/pulse/internal/cell/presence"
-	"github.com/pulse-im/pulse/internal/cell/reaction"
+	"github.com/pulse-workspace/pulse/internal/cell/message"
+	"github.com/pulse-workspace/pulse/internal/cell/presence"
+	"github.com/pulse-workspace/pulse/internal/cell/reaction"
 )
 
 // stubDeps is a test double for ServiceDeps that records the calls

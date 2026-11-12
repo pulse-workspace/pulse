@@ -11,8 +11,8 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/oklog/ulid/v2"
 
-	"github.com/pulse-im/pulse/pkg/shared/events"
-	"github.com/pulse-im/pulse/pkg/protocol"
+	"github.com/pulse-workspace/pulse/pkg/shared/events"
+	"github.com/pulse-workspace/pulse/pkg/protocol"
 )
 
 // SendMessage publishes a MessageSent event and populates the

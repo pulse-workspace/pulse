@@ -13,7 +13,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"github.com/pulse-im/pulse/pkg/shared/db"
+	"github.com/pulse-workspace/pulse/pkg/shared/db"
 )
 
 // attachmentColumns is the canonical column order used in every scan.

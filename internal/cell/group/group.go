@@ -25,11 +25,11 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/oklog/ulid/v2"
 
-	"github.com/pulse-im/pulse/internal/cell"
-	"github.com/pulse-im/pulse/pkg/shared/db"
-	"github.com/pulse-im/pulse/pkg/shared/events"
-	"github.com/pulse-im/pulse/pkg/shared/logger"
-	"github.com/pulse-im/pulse/pkg/shared/nats"
+	"github.com/pulse-workspace/pulse/internal/cell"
+	"github.com/pulse-workspace/pulse/pkg/shared/db"
+	"github.com/pulse-workspace/pulse/pkg/shared/events"
+	"github.com/pulse-workspace/pulse/pkg/shared/logger"
+	"github.com/pulse-workspace/pulse/pkg/shared/nats"
 )
 
 // Service is the group domain service.

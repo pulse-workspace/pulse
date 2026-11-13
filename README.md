@@ -12,12 +12,12 @@
   <a href="https://nats.io"><img src="https://img.shields.io/badge/NATS-JetStream-27AAE1.svg?style=flat-square&logo=nats.io" alt="NATS JetStream"></a>
   <a href="https://www.postgresql.org"><img src="https://img.shields.io/badge/PostgreSQL-16-4169E1.svg?style=flat-square&logo=postgresql" alt="PostgreSQL 16"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-10B981.svg?style=flat-square" alt="License"></a>
-  <a href="./docs/en/index.md"><img src="https://img.shields.io/badge/docs-English%20%7C%20Việt-8B5CF6.svg?style=flat-square" alt="Documentation"></a>
+  <a href="../pulse-docs"><img src="https://img.shields.io/badge/docs-Portal%20(pulse--docs)-8B5CF6.svg?style=flat-square" alt="Documentation"></a>
 </p>
 
 ---
 
-Pulse is an enterprise-grade, high-throughput instant messaging engine designed for massive concurrent connections and predictable sub-millisecond latencies. 
+Pulse is an enterprise-grade, high-throughput instant messaging engine designed for massive concurrent connections and predictable sub-millisecond latencies.
 
 Instead of brittle, hard-to-maintain microservice meshes, Pulse employs an **autonomous cell architecture** packaged in a **single binary**. It cleanly decouples connection termination (Gateway) from business logic (Domain Cells) and asynchronous materialization (Projection Runners) via **NATS JetStream** and **PostgreSQL 16**.
 
@@ -94,7 +94,7 @@ flowchart TD
 
 ---
 
-## Quick Start (Under 60 Seconds)
+## Quick Start
 
 ### Prerequisites
 
@@ -125,6 +125,7 @@ make migrate-up
 ```
 
 Verify service health:
+
 ```bash
 curl http://localhost:32011/healthz
 ```
